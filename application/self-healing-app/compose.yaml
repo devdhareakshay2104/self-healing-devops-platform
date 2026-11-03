@@ -1,0 +1,16 @@
+
+services:
+  self-healing-app:
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: self-healing-app:v4
+
+    container_name: self-healing-compose
+
+    ports:
+      - "8080:8080"
+
+    restart: unless-stopped
