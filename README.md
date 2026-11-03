@@ -186,3 +186,65 @@ The platform will implement the following features:
 To build an end-to-end automated DevOps platform on AWS that minimizes manual deployment activities, improves application availability, and provides automated failure recovery.
 
 **Project Status:** Phase 1 Completed – Java Application Development.
+
+# Phase 2: Docker Containerization
+
+## Overview
+
+In this phase, I containerized the Spring Boot application
+using Docker and Docker Compose.
+
+## Technologies Used
+
+- Docker
+- Docker Desktop
+- Docker Hub
+- Dockerfile
+- Docker Compose
+- Java 21
+- Spring Boot
+- Maven
+
+## Practical Implementations
+
+1. Installed and configured Docker.
+2. Created a Dockerfile for the Spring Boot application.
+3. Built Docker images.
+4. Ran the application inside a Docker container.
+5. Configured port mapping.
+6. Monitored containers using Docker logs and stats.
+7. Implemented Docker health checks.
+8. Created a multi-stage Docker build.
+9. Managed the application using Docker Compose.
+
+## Docker Images
+
+- self-healing-app:v1
+- self-healing-app:v2
+- self-healing-app:v3
+- self-healing-app:v4
+
+## Application Endpoints
+
+| Endpoint | Purpose |
+|---|---|
+| / | Home page |
+| /health | Application health |
+| /version | Application version |
+| /actuator/health | Spring Boot health monitoring |
+
+## Important Docker Commands
+
+```bash
+docker images
+docker ps -a
+docker build -t self-healing-app:v1 .
+docker run -d --name self-healing-container -p 8080:8080 self-healing-app:v1
+docker logs self-healing-container
+docker stats self-healing-container
+docker inspect self-healing-container
+docker compose up -d --build
+docker compose ps
+docker compose logs
+docker compose down
+
