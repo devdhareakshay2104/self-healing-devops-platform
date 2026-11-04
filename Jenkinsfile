@@ -5,6 +5,9 @@ pipeline {
     environment {
         APP_DIR = 'application/self-healing-app'
         IMAGE_NAME = 'self-healing-app'
+
+        JAVA_HOME = '/usr/lib/jvm/java-21-openjdk-amd64'
+        PATH+JAVA = '/usr/lib/jvm/java-21-openjdk-amd64/bin'
     }
 
     stages {
@@ -16,10 +19,22 @@ pipeline {
             }
         }
 
+        stage('Java Environment Check') {
+            steps {
+                sh '''
+                    echo "Checking Java environment..."
+                    echo "JAVA_HOME=$JAVA_HOME"
+                    java -version
+                    javac -version
+                '''
+            }
+        }
+
         stage('Build and Test') {
             steps {
                 dir("${APP_DIR}") {
                     sh 'chmod +x mvnw'
+                    sh './mvnw -version'
                     sh './mvnw clean verify'
                 }
             }
