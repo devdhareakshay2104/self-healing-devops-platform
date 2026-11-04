@@ -3,11 +3,10 @@ pipeline {
     agent any
 
     environment {
-        APP_DIR = 'application/self-healing-app'
-        IMAGE_NAME = 'self-healing-app'
-
-        JAVA_HOME = '/usr/lib/jvm/java-21-openjdk-amd64'
-        PATH+JAVA = '/usr/lib/jvm/java-21-openjdk-amd64/bin'
+    APP_DIR = 'application/self-healing-app'
+    IMAGE_NAME = 'self-healing-app'
+    JAVA_HOME = '/usr/lib/jvm/java-21-openjdk-amd64'
+    PATH = "/usr/lib/jvm/java-21-openjdk-amd64/bin:${env.PATH}"
     }
 
     stages {
