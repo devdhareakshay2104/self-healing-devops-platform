@@ -1,92 +1,31 @@
 
-pipeline {
-    agent any
+stage('Push to ECR') {
+    steps {
+        script {
+            def registry = '273804046923.dkr.ecr.us-east-1.amazonaws.com'
+            def repository = 'self-healing-app'
+            def imageTag = "build-${env.BUILD_NUMBER}"
 
-    environment {
-    APP_DIR = 'application/self-healing-app'
-    IMAGE_NAME = 'self-healing-app'
-    JAVA_HOME = '/usr/lib/jvm/java-21-openjdk-amd64'
-    PATH = "/usr/lib/jvm/java-21-openjdk-amd64/bin:${env.PATH}"
-    }
+            sh """
+                echo "Authenticating Docker with Amazon ECR..."
 
-    stages {
+                aws ecr get-login-password --region us-east-1 | \
+                docker login --username AWS --password-stdin ${registry}
 
-        stage('Checkout') {
-            steps {
-                echo 'Checking out source code from GitHub'
-                checkout scm
-            }
-        }
+                echo "Tagging Docker image..."
 
-        stage('Java Environment Check') {
-            steps {
-                sh '''
-                    echo "Checking Java environment..."
-                    echo "JAVA_HOME=$JAVA_HOME"
-                    java -version
-                    javac -version
-                '''
-            }
-        }
+                docker tag self-healing-app:v4 ${registry}/${repository}:${imageTag}
 
-        stage('Build and Test') {
-            steps {
-                dir("${APP_DIR}") {
-                    sh 'chmod +x mvnw'
-                    sh './mvnw -version'
-                    sh './mvnw clean verify'
-                }
-            }
-        }
+                docker tag self-healing-app:v4 ${registry}/${repository}:latest
 
-        stage('Docker Build') {
-            steps {
-                dir("${APP_DIR}") {
-                    sh 'docker build -t self-healing-app:latest .'
-                }
-            }
-        }
+                echo "Pushing Docker image to ECR..."
 
-        stage('Deploy') {
-            steps {
-                dir("${APP_DIR}") {
-                    sh 'docker compose up -d --build'
-                }
-            }
-        }
+                docker push ${registry}/${repository}:${imageTag}
 
-        stage('Health Check') {
-            steps {
-                sh '''
-                    for i in $(seq 1 12); do
-                        STATUS=$(docker inspect \
-                          --format='{{.State.Health.Status}}' \
-                          self-healing-compose 2>/dev/null || true)
+                docker push ${registry}/${repository}:latest
 
-                        if [ "$STATUS" = "healthy" ]; then
-                            echo "Application is healthy!"
-                            exit 0
-                        fi
-
-                        echo "Waiting for application health..."
-                        sleep 10
-                    done
-
-                    echo "Application health check failed!"
-                    docker compose -f application/self-healing-app/compose.yaml logs
-                    exit 1
-                '''
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'CI/CD Pipeline completed successfully!'
-        }
-
-        failure {
-            echo 'CI/CD Pipeline failed. Check the console output.'
+                echo "Docker images pushed successfully!"
+            """
         }
     }
 }
