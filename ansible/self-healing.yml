@@ -1,0 +1,85 @@
+
+---
+- name: Configure Self-Healing Application
+  hosts: app_servers
+  become: true
+
+  vars:
+    container_name: self-healing-app
+
+  tasks:
+    - name: Create self-healing monitoring script
+      copy:
+        dest: /usr/local/bin/self-healing-check.sh
+        mode: '0755'
+        content: |
+          #!/bin/bash
+
+          APP_URL="http://127.0.0.1:8080/actuator/health"
+          CONTAINER="self-healing-app"
+          LOG_FILE="/var/log/self-healing.log"
+
+          if ! curl -fsS --max-time 10 "$APP_URL" > /dev/null; then
+              echo "$(date): Application unhealthy. Restarting container." >> "$LOG_FILE"
+
+              docker restart "$CONTAINER" >> "$LOG_FILE" 2>&1
+
+              sleep 15
+
+              if curl -fsS --max-time 10 "$APP_URL" > /dev/null; then
+                  echo "$(date): Application recovered successfully." >> "$LOG_FILE"
+              else
+                  echo "$(date): Application recovery failed." >> "$LOG_FILE"
+              fi
+          else
+              echo "$(date): Application healthy." >> "$LOG_FILE"
+          fi
+
+    - name: Create systemd service
+      copy:
+        dest: /etc/systemd/system/self-healing.service
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=Self Healing Application Health Check
+          After=docker.service
+          Requires=docker.service
+
+          [Service]
+          Type=oneshot
+          ExecStart=/usr/local/bin/self-healing-check.sh
+
+    - name: Create systemd timer
+      copy:
+        dest: /etc/systemd/system/self-healing.timer
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=Run Self Healing Check Every Minute
+
+          [Timer]
+          OnBootSec=1min
+          OnUnitActiveSec=1min
+          Unit=self-healing.service
+
+          [Install]
+          WantedBy=timers.target
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: true
+
+    - name: Enable and start self-healing timer
+      systemd:
+        name: self-healing.timer
+        state: started
+        enabled: true
+
+    - name: Verify self-healing timer
+      command: systemctl status self-healing.timer --no-pager
+      register: timer_status
+      changed_when: false
+
+    - name: Display timer status
+      debug:
+        var: timer_status.stdout_lines

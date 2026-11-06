@@ -113,6 +113,7 @@ resource "aws_security_group" "app_sg" {
   }
 }
 
+
 # ==========================================
 # 7. IAM ROLE FOR APPLICATION EC2
 # ==========================================
@@ -142,18 +143,37 @@ resource "aws_iam_role" "app_role" {
 
 
 # ==========================================
-# 8. ATTACH ECR PERMISSIONS
+# 8. ATTACH ECR READ-ONLY PERMISSIONS
 # ==========================================
 
 resource "aws_iam_role_policy_attachment" "ecr_access" {
-  role = aws_iam_role.app_role.name
-
+  role       = aws_iam_role.app_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 
 # ==========================================
-# 9. CREATE EC2 INSTANCE PROFILE
+# 9. ATTACH SYSTEMS MANAGER PERMISSIONS
+# ==========================================
+
+resource "aws_iam_role_policy_attachment" "ssm_access" {
+  role       = aws_iam_role.app_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+
+# ==========================================
+# 10. ATTACH CLOUDWATCH AGENT PERMISSIONS
+# ==========================================
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_agent" {
+  role       = aws_iam_role.app_role.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
+
+# ==========================================
+# 11. CREATE EC2 INSTANCE PROFILE
 # ==========================================
 
 resource "aws_iam_instance_profile" "app_profile" {
@@ -163,7 +183,7 @@ resource "aws_iam_instance_profile" "app_profile" {
 
 
 # ==========================================
-# 10. CREATE APPLICATION EC2 INSTANCE
+# 12. CREATE APPLICATION EC2 INSTANCE
 # ==========================================
 
 resource "aws_instance" "app_server" {
@@ -183,8 +203,4 @@ resource "aws_instance" "app_server" {
     Name    = "${var.project_name}-app-server"
     Project = var.project_name
   }
-}
-resource "aws_iam_role_policy_attachment" "ssm_access" {
-  role       = aws_iam_role.app_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
