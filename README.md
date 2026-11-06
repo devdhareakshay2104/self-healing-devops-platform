@@ -1,777 +1,407 @@
 # 🚀 Self-Healing Cloud Infrastructure & Automated Deployment Platform
 
-## 1. Project Overview
+<p align="center">
+  <b>An Automated DevOps Platform for CI/CD, Cloud Infrastructure, Deployment, Monitoring and Self-Healing</b>
+</p>
 
-The **Self-Healing Cloud Infrastructure & Automated Deployment Platform** is an end-to-end DevOps project designed to automate application development, infrastructure provisioning, CI/CD, configuration management, deployment, monitoring, failure detection, and application recovery using AWS and DevOps tools.
+## 📌 Project Overview
 
-The main objective is to build an automated deployment platform where developers push application code to GitHub and the CI/CD pipeline handles the build, testing, containerization, and deployment process.
+The **Self-Healing Cloud Infrastructure & Automated Deployment Platform** is a cloud-based DevOps project designed to automate application building, containerization, deployment, infrastructure provisioning, monitoring, and application recovery.
 
-The platform is designed to monitor application health, detect failures, and perform automated recovery to improve application availability and reliability.
+This project integrates AWS services and DevOps tools to reduce manual intervention and improve application availability.
 
-## 2. Project Objectives
+Jenkins automates CI/CD, Docker containerizes the application, Amazon ECR stores container images, Terraform provisions AWS infrastructure, and Ansible automates deployment and configuration.
+
+Amazon CloudWatch monitors infrastructure metrics, while a custom self-healing mechanism detects application failures and automatically restarts the Docker container.
+
+## 🎯 Project Objectives
 
 - Automate application build and deployment.
+- Implement Jenkins-based CI/CD.
+- Containerize the Spring Boot application using Docker.
+- Store Docker images in Amazon ECR.
 - Provision AWS infrastructure using Terraform.
-- Configure servers using Ansible.
-- Containerize applications using Docker.
-- Implement CI/CD using Jenkins.
-- Store Docker images in AWS ECR.
-- Monitor application health and logs using CloudWatch.
+- Automate deployment using Ansible.
+- Monitor EC2 resources using CloudWatch.
 - Implement automatic application recovery.
-- Implement automatic rollback for failed deployments.
-- Send notifications for deployment failures and recovery events.
-- Maintain infrastructure and application deployment through automation.
+- Send email notifications using Amazon SNS.
 
-## 3. Technologies Used
+## 🛠️ Technologies Used
 
-| Technology | Purpose |
+| Category | Technologies |
 |---|---|
-| Java 21 | Application development |
-| Spring Boot 4 | REST API development |
-| Maven | Build automation and dependency management |
-| Git | Version control |
-| GitHub | Source code management |
-| Docker | Application containerization |
-| Docker Compose | Container management |
-| Jenkins | CI/CD automation |
-| AWS EC2 | Application hosting |
-| AWS VPC | Network infrastructure |
-| AWS IAM | Access management |
-| AWS ECR | Docker image repository |
-| AWS Systems Manager | Secure EC2 management |
-| Terraform | Infrastructure as Code |
-| Ansible | Configuration management |
-| AWS CloudWatch | Monitoring and logging (planned) |
-| AWS SNS | Notifications (planned) |
+| Programming Language | Java 21 |
+| Framework | Spring Boot |
+| Build Tool | Maven |
+| CI/CD | Jenkins |
+| Containerization | Docker, Docker Compose |
+| Container Registry | Amazon ECR |
+| Cloud Platform | AWS |
+| Infrastructure as Code | Terraform |
+| Configuration Management | Ansible |
+| Monitoring | Amazon CloudWatch |
+| Notifications | Amazon SNS |
+| Automation | Bash, systemd |
+| Version Control | Git, GitHub |
+| Operating System | Ubuntu, Windows 11 |
 
-## 4. Project Architecture
+## 🏗️ Project Architecture
 
 ```text
-                 Developer
+                 DEVELOPER
                      |
                      v
-               GitHub Repository
+                GITHUB REPO
                      |
                      v
-              Jenkins CI/CD Pipeline
+             JENKINS CI/CD PIPELINE
                      |
-                     v
-              Maven Build and Testing
-                     |
-                     v
-                Docker Build
-                     |
-                     v
-                  AWS ECR
-                     |
-                     v
-             Terraform Provisioning
-                     |
-                     v
-                AWS EC2
-                     |
-                     v
-             Ansible Configuration
-                     |
-                     v
-            Docker Application Deployment
-                     |
-                     v
-             CloudWatch Monitoring
-                     |
-                     v
-          Self-Healing and Auto Recovery
-                     |
-                     v
-              SNS Notifications
+             +-------+-------+
+             |       |       |
+             v       v       v
+           Maven   Testing  Docker
+                             |
+                             v
+                       AMAZON ECR
+                             |
+                             v
+                  TERRAFORM PROVISIONING
+                             |
+                             v
+                     AWS INFRASTRUCTURE
+                             |
+                             v
+                    EC2 APPLICATION SERVER
+                             |
+                             v
+                    ANSIBLE DEPLOYMENT
+                             |
+                             v
+                    DOCKER CONTAINER
+                             |
+                             v
+                    SPRING BOOT APP
+                             |
+                 +-----------+-----------+
+                 |                       |
+                 v                       v
+             CLOUDWATCH             SELF-HEALING
+             MONITORING             AUTOMATION
+                 |                       |
+                 v                       v
+              SNS EMAIL              CONTAINER
+             NOTIFICATION             RECOVERY
 ```
 
-## 5. Project Implementation
+## ⚙️ Project Implementation
 
-### Phase 1: Java Application Development
+### Phase 1 – Spring Boot Application
 
-**Objective:** Develop a Spring Boot application with health-check and version endpoints.
+- Developed a Spring Boot application using Java 21 and Maven.
+- Created application health-check endpoints.
+- Configured Spring Boot Actuator.
 
-**Technologies:**
-- Java 21
-- Spring Boot 4
-- Maven
-
-#### Application Endpoints
+**Application endpoints:**
 
 | Endpoint | Description |
 |---|---|
-| `/` | Home endpoint |
-| `/health` | Application health status |
+| `/` | Application running message |
+| `/health` | Application health information |
 | `/version` | Application version |
-| `/actuator/health` | Spring Boot health monitoring |
+| `/actuator/health` | Spring Boot health check |
 
-#### Maven Commands
+### Phase 2 – Docker & Jenkins CI/CD
 
-Compile the application:
+- Created Dockerfile for application containerization.
+- Configured Jenkins pipeline.
+- Integrated Maven build and testing.
+- Automated Docker image creation.
+- Configured application deployment and health checks.
 
-```bash
-mvn clean compile
-```
+### Phase 3 – AWS ECR Integration
 
-Run unit tests:
+- Created a private Amazon ECR repository.
+- Configured IAM permissions for Jenkins EC2.
+- Integrated Docker with Amazon ECR.
+- Automated Docker image tagging and pushing.
 
-```bash
-mvn test
-```
-
-Package the application:
-
-```bash
-mvn clean package
-```
-
-Run the application:
-
-```bash
-mvn spring-boot:run
-```
-
-#### Application Configuration
+**ECR Repository:**
 
 ```text
-Application Name: self-healing-app
-Server Port: 8080
-Java Version: 21
-```
-
-#### Expected Health Response
-
-```json
-{
-  "status": "UP",
-  "application": "self-healing-app"
-}
-```
-
-**Status:** Completed.
-
----
-
-### Phase 2: Docker Containerization and Jenkins CI/CD
-
-**Objective:** Containerize the Spring Boot application and automate its build, testing, and deployment using Jenkins.
-
-#### Technologies Used
-
-- Docker
-- Docker Compose
-- Dockerfile
-- Jenkins
-- GitHub
-- Maven
-- Java 21
-- AWS EC2
-
-#### Docker Practical Implementations
-
-1. Installed and configured Docker on AWS EC2.
-2. Created a Dockerfile for the Spring Boot application.
-3. Built Docker images.
-4. Ran the application inside Docker containers.
-5. Configured container port mapping.
-6. Monitored containers using Docker logs and stats.
-7. Implemented Docker health checks.
-8. Created a multi-stage Docker build.
-9. Managed the application using Docker Compose.
-10. Configured container restart policies.
-
-#### Docker Images
-
-- `self-healing-app:v1`
-- `self-healing-app:v2`
-- `self-healing-app:v3`
-- `self-healing-app:v4`
-
-#### Jenkins CI/CD Pipeline
-
-Created a Jenkins pipeline named:
-
-```text
-self-healing-devops-pipeline
-```
-
-Pipeline stages:
-
-1. Checkout source code from GitHub.
-2. Check Java environment.
-3. Build and test the application using Maven.
-4. Build Docker image.
-5. Deploy application using Docker Compose.
-6. Perform application health checks.
-
-#### Important Docker Commands
-
-```bash
-docker images
-docker ps -a
-
-docker build -t self-healing-app:v1 .
-
-docker run -d \
-  --name self-healing-container \
-  -p 8080:8080 \
-  self-healing-app:v1
-
-docker logs self-healing-container
-docker stats self-healing-container
-docker inspect self-healing-container
-
-docker compose up -d --build
-docker compose ps
-docker compose logs
-docker compose down
-```
-
-**Status:** Completed.
-
----
-
-### Phase 3: AWS ECR Integration
-
-**Objective:** Store Docker images in Amazon Elastic Container Registry (ECR) and integrate ECR with the Jenkins pipeline.
-
-#### AWS Services Used
-
-- Amazon ECR
-- AWS IAM
-- AWS EC2
-
-#### ECR Repository
-
-```text
-Repository Name: self-healing-app
-
-Region: us-east-1
-
-Repository URI:
 273804046923.dkr.ecr.us-east-1.amazonaws.com/self-healing-app
 ```
 
-#### Practical Implementations
+### Phase 4 – Terraform Infrastructure Provisioning
 
-1. Created a private ECR repository.
-2. Configured an IAM role for the Jenkins EC2 instance.
-3. Attached ECR permissions to the IAM role.
-4. Installed AWS CLI on the Jenkins EC2 instance.
-5. Authenticated Docker with Amazon ECR.
-6. Tagged Docker images with the ECR repository URI.
-7. Pushed Docker images to ECR.
-8. Integrated ECR image pushing into the Jenkins pipeline.
+Provisioned AWS infrastructure using Terraform.
 
-#### Important ECR Commands
+**Resources created:**
 
-Authenticate Docker with ECR:
+- VPC
+- Public Subnet
+- Internet Gateway
+- Public Route Table
+- Route Table Association
+- Security Group
+- IAM Role
+- IAM Policy Attachments
+- IAM Instance Profile
+- EC2 Application Server
 
-```bash
-aws ecr get-login-password --region us-east-1 | \
-docker login --username AWS --password-stdin \
-273804046923.dkr.ecr.us-east-1.amazonaws.com
-```
+**Network configuration:**
 
-Tag Docker image:
-
-```bash
-docker tag self-healing-app:v4 \
-273804046923.dkr.ecr.us-east-1.amazonaws.com/self-healing-app:v4
-```
-
-Push Docker image:
-
-```bash
-docker push \
-273804046923.dkr.ecr.us-east-1.amazonaws.com/self-healing-app:v4
-```
-
-Verify ECR images:
-
-```bash
-aws ecr list-images \
---repository-name self-healing-app \
---region us-east-1
-```
-
-**Status:** Completed. Docker images were successfully pushed to ECR.
-
----
-
-### Phase 4: AWS Infrastructure Provisioning Using Terraform
-
-**Objective:** Automate AWS infrastructure provisioning using Terraform (Infrastructure as Code).
-
-#### Technologies Used
-
-- Terraform
-- AWS Provider
-- AWS VPC
-- AWS EC2
-- AWS IAM
-- AWS Security Groups
-
-#### Infrastructure Created
-
-| AWS Resource | Description |
+| Resource | Configuration |
 |---|---|
-| VPC | Custom virtual private cloud |
-| Public Subnet | Hosts application EC2 instance |
-| Internet Gateway | Provides internet connectivity |
-| Route Table | Routes internet traffic |
-| Security Group | Controls inbound and outbound traffic |
-| IAM Role | Grants AWS permissions to EC2 |
-| IAM Instance Profile | Attaches IAM role to EC2 |
-| EC2 Instance | Hosts the application |
+| VPC CIDR | `10.0.0.0/16` |
+| Public Subnet | `10.0.1.0/24` |
+| Availability Zone | `us-east-1a` |
+| EC2 Instance | `t3.micro` |
+| Root Volume | 12 GB gp3 |
+| AWS Region | `us-east-1` |
 
-#### Network Configuration
-
-```text
-VPC CIDR: 10.0.0.0/16
-
-Public Subnet: 10.0.1.0/24
-
-Availability Zone: us-east-1a
-
-AWS Region: us-east-1
-```
-
-#### IAM Permissions
-
-The application EC2 instance uses an IAM role with:
-
-- AmazonEC2ContainerRegistryReadOnly
-- AmazonSSMManagedInstanceCore
-
-These permissions allow the EC2 instance to pull Docker images from ECR and register with AWS Systems Manager.
-
-#### Terraform File Structure
-
-```text
-terraform/
-│
-├── provider.tf
-├── variables.tf
-├── main.tf
-├── outputs.tf
-├── terraform.tfvars
-└── .terraform.lock.hcl
-```
-
-Note: `.terraform/`, Terraform state files, and `terraform.tfvars` are excluded from Git using `.gitignore`.
-
-#### Important Terraform Commands
-
-Initialize Terraform:
+**Terraform commands:**
 
 ```bash
 terraform init
-```
-
-Format configuration files:
-
-```bash
 terraform fmt
-```
-
-Validate configuration:
-
-```bash
 terraform validate
-```
-
-Preview infrastructure changes:
-
-```bash
 terraform plan
-```
-
-Create infrastructure:
-
-```bash
 terraform apply
-```
-
-Display infrastructure outputs:
-
-```bash
 terraform output
 ```
 
-#### Practical Implementations
+### Phase 5 – Ansible Configuration & Deployment
 
-1. Installed Terraform on Windows.
-2. Configured AWS CLI credentials.
-3. Configured the AWS Terraform provider.
-4. Created a custom VPC and public subnet.
-5. Created an Internet Gateway and route table.
-6. Configured route table association.
-7. Created an application security group.
-8. Created an IAM role and instance profile.
-9. Provisioned an Ubuntu EC2 instance.
-10. Configured ECR read-only permissions.
-11. Configured Systems Manager permissions.
+Used Ubuntu WSL as the Ansible control node and AWS EC2 as the managed node.
 
-**Status:** Infrastructure provisioned using Terraform.
+**Implemented tasks:**
 
----
+- Connected to EC2 using SSH.
+- Installed Docker.
+- Started and enabled Docker service.
+- Installed AWS CLI v2.
+- Authenticated with Amazon ECR using IAM role.
+- Pulled Docker images from ECR.
+- Deployed the Spring Boot application.
+- Verified application health.
 
-### Phase 5: Ansible Configuration Management and Automated Deployment
-
-**Objective:** Automate EC2 server configuration and application deployment using Ansible.
-
-#### Technologies Used
-
-- Ansible
-- Ubuntu 24.04
-- Windows Subsystem for Linux (WSL)
-- OpenSSH
-- AWS CLI v2
-- Docker
-- AWS ECR
-
-#### Ansible Architecture
-
-```text
-        Ansible Control Node
-             Ubuntu WSL
-                  |
-                  |
-             SSH Connection
-                  |
-                  v
-          AWS EC2 Managed Node
-             Ubuntu 24.04
-                  |
-                  v
-            Docker Installation
-                  |
-                  v
-              AWS ECR
-                  |
-                  v
-          Application Deployment
-```
-
-#### Control Node Configuration
-
-Installed Ansible on Ubuntu WSL.
-
-Commands:
+**Ansible commands:**
 
 ```bash
-sudo apt update
+ansible app_servers -i inventory.ini -m ping
 
-sudo apt install ansible openssh-client -y
-
-ansible --version
-```
-
-#### SSH Key Configuration
-
-Generated an ED25519 SSH key:
-
-```bash
-mkdir -p ~/.ssh
-
-chmod 700 ~/.ssh
-
-ssh-keygen -t ed25519 \
--C "ansible-self-healing-platform"
-```
-
-Displayed the public key:
-
-```bash
-cat ~/.ssh/id_ed25519.pub
-```
-
-Configured SSH public-key access for the Ubuntu user on the Terraform-created EC2 instance.
-
-Connected to EC2:
-
-```bash
-ssh -i ~/.ssh/id_ed25519 \
-ubuntu@EC2_PUBLIC_IP
-```
-
-Note: The private SSH key is stored securely on the Ansible control node and is never committed to GitHub.
-
-#### Ansible Project Structure
-
-```text
-ansible/
-│
-├── inventory.ini
-├── install-docker.yml
-└── deploy-app.yml
-```
-
-#### Inventory Configuration
-
-The inventory file defines the target EC2 server.
-
-Example:
-
-```ini
-[app_servers]
-app_server ansible_host=EC2_PUBLIC_IP ansible_user=ubuntu ansible_ssh_private_key_file=/home/USERNAME/.ssh/id_ed25519
-```
-
-Replace the placeholders with your actual EC2 public IP and WSL username. Do not publish private keys or credentials.
-
-#### Test Ansible Connectivity
-
-```bash
-ansible -i inventory.ini app_servers -m ping
-```
-
-Expected response:
-
-```text
-app_server | SUCCESS => {
-    "changed": false,
-    "ping": "pong"
-}
-```
-
-#### Docker Installation Using Ansible
-
-Created `install-docker.yml` to automate:
-
-1. Updating Ubuntu packages.
-2. Installing Docker.
-3. Starting the Docker service.
-4. Enabling Docker at system startup.
-5. Adding the Ubuntu user to the Docker group.
-6. Verifying Docker installation.
-
-Execute the playbook:
-
-```bash
 ansible-playbook -i inventory.ini install-docker.yml
-```
 
-Verify Docker:
-
-```bash
-ansible -i inventory.ini app_servers \
--b -m command -a "docker --version"
-```
-
-#### AWS CLI Installation and ECR Authentication
-
-Created `deploy-app.yml` to automate:
-
-1. Installing Docker, curl, and unzip.
-2. Downloading AWS CLI v2.
-3. Installing AWS CLI v2.
-4. Starting and enabling Docker.
-5. Authenticating Docker with AWS ECR using the EC2 IAM role.
-6. Pulling the application image from ECR.
-7. Removing an existing application container.
-8. Running the application container.
-9. Checking application health.
-
-AWS CLI version verification:
-
-```bash
-aws --version
-```
-
-ECR authentication is performed using the EC2 IAM instance profile, avoiding the need to store AWS access keys on the application server.
-
-#### Application Deployment
-
-ECR repository:
-
-```text
-273804046923.dkr.ecr.us-east-1.amazonaws.com/self-healing-app
-```
-
-Application image:
-
-```text
-self-healing-app:v4
-```
-
-Application deployment uses Docker port mapping:
-
-```text
-EC2 Port: 8080
-Container Port: 8080
-```
-
-Execute the deployment playbook:
-
-```bash
 ansible-playbook -i inventory.ini deploy-app.yml
 ```
 
-Verify the running container:
+### Phase 6 – AWS CloudWatch Monitoring
 
-```bash
-ansible -i inventory.ini app_servers \
--b -m command -a "docker ps"
+Integrated CloudWatch Agent with the application EC2 instance.
+
+**Metrics monitored:**
+
+- CPU utilization through EC2 metrics.
+- Memory utilization through CloudWatch Agent.
+- Disk utilization through CloudWatch Agent.
+
+**CloudWatch namespace:** `CWAgent`
+
+### Phase 7 – Self-Healing Automation
+
+Implemented automated application health monitoring and Docker container recovery using Bash scripting, systemd, and Ansible.
+
+**Working process:**
+
+1. Systemd timer executes the health-check service every minute.
+2. Bash script checks the Spring Boot Actuator endpoint.
+3. If the application is unhealthy, Docker container restart is triggered.
+4. Script waits for application startup.
+5. Application health is checked again.
+6. Recovery information is stored in `/var/log/self-healing.log`.
+
+**Health-check endpoint:**
+
+```text
+http://127.0.0.1:8080/actuator/health
 ```
 
-Verify application health:
+**Recovery test result:**
 
-```bash
-ansible -i inventory.ini app_servers \
--b -m uri \
--a "url=http://localhost:8080/actuator/health status_code=200"
-```
-
-**Status:** Ansible control node, SSH connectivity, Docker automation, AWS CLI installation, and ECR authentication configured. Application deployment and health-check verification are part of the deployment validation.
-
----
-
-### Phase 6: AWS CloudWatch Monitoring and Logging
-
-**Objective:** Monitor AWS infrastructure and application performance using Amazon CloudWatch.
-
-#### Planned Implementations
-
-1. Install and configure CloudWatch Agent.
-2. Monitor EC2 CPU utilization.
-3. Monitor memory utilization.
-4. Monitor disk usage.
-5. Collect application logs.
-6. Create CloudWatch alarms.
-7. Configure monitoring dashboards.
-
-**Status:** Planned.
-
----
-
-### Phase 7: Self-Healing and Automatic Recovery
-
-**Objective:** Implement automatic application failure detection and recovery.
-
-#### Planned Implementations
-
-1. Monitor application health endpoints.
-2. Detect application failures.
-3. Automatically restart unhealthy Docker containers.
-4. Configure recovery scripts.
-5. Implement automated deployment rollback.
-6. Test failure and recovery scenarios.
-7. Record recovery events.
-
-**Status:** Planned.
-
----
-
-### Phase 8: Notifications, Final Testing and Documentation
-
-**Objective:** Complete the automated platform and validate the entire CI/CD and self-healing workflow.
-
-#### Planned Implementations
-
-1. Configure Amazon SNS email notifications.
-2. Send deployment failure notifications.
-3. Send recovery notifications.
-4. Test the complete Jenkins pipeline.
-5. Test infrastructure and application recovery.
-6. Validate application availability.
-7. Update project architecture documentation.
-8. Complete the GitHub README.
-
-**Status:** Planned.
-
-## 6. Self-Healing Features
-
-The platform is designed to implement the following features:
-
-- Application health monitoring.
-- Automatic container restart.
-- Failure detection.
-- Automated deployment rollback.
-- Application recovery.
-- Cloud infrastructure monitoring.
-- Deployment notifications.
-- Recovery event notifications.
-
-Note: These features will be marked complete after their respective recovery and failure scenarios are implemented and tested.
-
-## 7. Project Progress
-
-- [x] Phase 1: Java Application Development
-- [x] Phase 2: Docker Containerization and Jenkins CI/CD
-- [x] Phase 3: AWS ECR Integration
-- [x] Phase 4: AWS Infrastructure Provisioning Using Terraform
-- [x] Phase 5: Ansible Configuration Management Setup
-- [ ] Phase 5: Complete Application Deployment Verification
-- [ ] Phase 6: AWS CloudWatch Monitoring and Logging
-- [ ] Phase 7: Self-Healing and Automatic Recovery
-- [ ] Phase 8: Notifications, Final Testing and Documentation
-
-## 8. Project Goal
-
-To build an end-to-end automated DevOps platform on AWS that minimizes manual deployment activities, improves application availability, automates infrastructure management, and provides automatic application failure recovery.
-
-## 9. Future Enhancements
-
-- Prometheus and Grafana for advanced monitoring.
-- Kubernetes for container orchestration.
-- Trivy for Docker image vulnerability scanning.
-- Advanced deployment strategies.
-- Improved automated rollback mechanisms.
-
-## 10. Project Status
-
-**Current Progress:** Phase 5 – Ansible Configuration Management.
-
-**Completed Core Technologies:** Java, Spring Boot, Maven, Docker, Jenkins, GitHub, AWS ECR, Terraform, Ansible, AWS EC2, IAM, VPC, and Systems Manager.
-
-**Upcoming Work:** CloudWatch Monitoring, Self-Healing Automation, SNS Notifications, and Final Testing.
-
-### Phase 7 – Self-Healing Automation (Completed)
-
-Implemented automated application health monitoring and container recovery using Ansible, Bash scripting, and systemd.
-
-**Features:**
-- Automated Spring Boot health checks every 60 seconds.
-- Detects application health failures.
-- Automatically restarts the Docker container.
-- Verifies application recovery after restart.
-- Maintains recovery logs in `/var/log/self-healing.log`.
-- Uses systemd service and timer for scheduled execution.
-- Docker container configured with automatic restart policy.
-
-**Recovery Test Result:**
-- Application failure successfully detected.
-- Docker container restart executed automatically.
+- Application failure was deliberately simulated.
+- Self-healing script detected the unhealthy application.
+- Docker container restart was triggered automatically.
 - Application recovered successfully.
-- Subsequent health checks confirmed application was healthy.
+- Subsequent health checks confirmed the application was healthy.
 
-**Status:** Successfully tested on AWS EC2.
+### Phase 8 – CloudWatch Alarms & SNS Notifications
 
-## Project Implementation Status
+Integrated Amazon SNS email notifications.
 
-| Phase | Implementation | Status |
+**SNS configuration:**
+
+- Topic: `self-healing-alerts`
+- Protocol: Email
+- Email subscription: Confirmed
+- Test notification: Successfully received
+
+**CloudWatch alarm configuration:**
+
+| Alarm | Metric | Threshold |
 |---|---|---|
-| 1 | Spring Boot Application | Completed |
-| 2 | Docker & Jenkins CI/CD | Completed |
-| 3 | AWS ECR Integration | Completed |
-| 4 | Terraform Infrastructure | Completed |
-| 5 | Ansible Configuration & Deployment | Implemented |
-| 6 | CloudWatch Monitoring | Implemented |
-| 7 | Self-Healing Automation | Tested successfully |
-| 8 | CloudWatch Alarms & SNS Notifications | SNS tested; alarms to be verified |
-| 9 | Final Integration & Testing | In progress |
+| self-healing-cpu-high | CPUUtilization | Greater than 80% |
+| self-healing-memory-high | mem_used_percent | Greater than 80% |
 
-### Key Project Features
+CloudWatch alarm configuration and actual alarm states should be verified in AWS before claiming both alarms are fully operational.
 
-- Automated CI/CD using Jenkins
-- Docker containerization
-- AWS ECR image management
-- Infrastructure provisioning using Terraform
-- Configuration management using Ansible
-- AWS CloudWatch monitoring
-- Automated Docker container recovery
-- SNS email notifications
-- Spring Boot application health checks
+## 📸 Project Screenshots
+
+The following screenshots demonstrate the actual implementation and execution of the project.
+
+### 1. Jenkins CI/CD Pipeline
+
+![Jenkins Pipeline](screenshots/jenkins.png)
+
+### 2. Docker Containerization
+
+![Docker Container](screenshots/docker.png)
+
+### 3. Amazon ECR Repository
+
+![Amazon ECR](screenshots/ecr.png)
+
+### 4. AWS EC2 Infrastructure
+
+![AWS EC2](screenshots/ec2.png)
+
+### 5. Ansible Automated Deployment
+
+![Ansible Deployment](screenshots/ansible.png)
+
+### 6. AWS CloudWatch Monitoring
+
+![CloudWatch Monitoring](screenshots/cloudwatch.png)
+
+### 7. CloudWatch Alarms
+
+![CloudWatch Alarms](screenshots/alarms.png)
+
+### 8. Amazon SNS Email Notification
+
+![SNS Email](screenshots/sns-email.png)
+
+### 9. Self-Healing Application Recovery
+
+![Self Healing Recovery](screenshots/self-healing.png)
+
+## 📁 Project Structure
+
+```text
+self-healing-devops-platform/
+│
+├── application/
+│   └── self-healing-app/
+│       ├── src/
+│       ├── Dockerfile
+│       ├── Jenkinsfile
+│       ├── pom.xml
+│       └── docker-compose.yml
+│
+├── terraform/
+│   ├── provider.tf
+│   ├── variables.tf
+│   ├── main.tf
+│   ├── outputs.tf
+│   └── .terraform.lock.hcl
+│
+├── ansible/
+│   ├── inventory.ini
+│   ├── install-docker.yml
+│   ├── deploy-app.yml
+│   ├── cloudwatch-agent.yml
+│   └── self-healing.yml
+│
+├── screenshots/
+│   ├── jenkins.png
+│   ├── docker.png
+│   ├── ecr.png
+│   ├── ec2.png
+│   ├── ansible.png
+│   ├── cloudwatch.png
+│   ├── alarms.png
+│   ├── sns-email.png
+│   └── self-healing.png
+│
+├── .gitignore
+└── README.md
+```
+
+*The structure above represents the intended repository layout. Keep only files that exist in your actual repository.*
+
+## 🔍 Useful Verification Commands
+
+```bash
+# Check application health
+curl http://localhost:8080/actuator/health
+
+# List running containers
+docker ps
+
+# View application logs
+docker logs self-healing-app
+
+# Check self-healing timer
+systemctl list-timers self-healing.timer
+
+# View self-healing logs
+tail -20 /var/log/self-healing.log
+
+# Check CloudWatch Agent
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a status
+```
+
+## 🔐 Security Considerations
+
+- Use IAM roles instead of hardcoding AWS access keys on EC2.
+- Never upload private SSH keys to GitHub.
+- Never commit AWS credentials or sensitive environment variables.
+- Keep Terraform state and sensitive `.tfvars` files out of public repositories.
+- Restrict SSH access to trusted IP addresses.
+- Follow the principle of least privilege for IAM permissions.
+
+## 🚀 Future Enhancements
+
+- Automated application rollback.
+- Prometheus and Grafana integration.
+- Trivy container image vulnerability scanning.
+- Kubernetes container orchestration.
+- Infrastructure-level recovery.
+- Improved failure retry and escalation mechanisms.
+
+## 💡 Key Learnings
+
+- AWS infrastructure and networking.
+- Terraform Infrastructure as Code.
+- Jenkins CI/CD pipeline implementation.
+- Docker image building and container management.
+- Amazon ECR integration.
+- Ansible automation.
+- Linux administration and Bash scripting.
+- CloudWatch monitoring and SNS notifications.
+- Application health checks and automated recovery.
+- Git and GitHub version control.
+
+## 👨‍💻 Author
+
+**Akshay Devdhare**
+
+B.Tech – Information Technology  
+Walchand Institute of Technology, Solapur
+
+GitHub: [devdhareakshay2104](https://github.com/devdhareakshay2104)
+
+---
+
+⭐ If you find this project useful, feel free to explore the repository and share your feedback.
+
+**Built with ☁️ AWS | ⚙️ DevOps | 🚀 Automation**
