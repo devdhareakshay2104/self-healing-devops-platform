@@ -728,3 +728,50 @@ To build an end-to-end automated DevOps platform on AWS that minimizes manual de
 **Completed Core Technologies:** Java, Spring Boot, Maven, Docker, Jenkins, GitHub, AWS ECR, Terraform, Ansible, AWS EC2, IAM, VPC, and Systems Manager.
 
 **Upcoming Work:** CloudWatch Monitoring, Self-Healing Automation, SNS Notifications, and Final Testing.
+
+### Phase 7 – Self-Healing Automation (Completed)
+
+Implemented automated application health monitoring and container recovery using Ansible, Bash scripting, and systemd.
+
+**Features:**
+- Automated Spring Boot health checks every 60 seconds.
+- Detects application health failures.
+- Automatically restarts the Docker container.
+- Verifies application recovery after restart.
+- Maintains recovery logs in `/var/log/self-healing.log`.
+- Uses systemd service and timer for scheduled execution.
+- Docker container configured with automatic restart policy.
+
+**Recovery Test Result:**
+- Application failure successfully detected.
+- Docker container restart executed automatically.
+- Application recovered successfully.
+- Subsequent health checks confirmed application was healthy.
+
+**Status:** Successfully tested on AWS EC2.
+
+## Project Implementation Status
+
+| Phase | Implementation | Status |
+|---|---|---|
+| 1 | Spring Boot Application | Completed |
+| 2 | Docker & Jenkins CI/CD | Completed |
+| 3 | AWS ECR Integration | Completed |
+| 4 | Terraform Infrastructure | Completed |
+| 5 | Ansible Configuration & Deployment | Implemented |
+| 6 | CloudWatch Monitoring | Implemented |
+| 7 | Self-Healing Automation | Tested successfully |
+| 8 | CloudWatch Alarms & SNS Notifications | SNS tested; alarms to be verified |
+| 9 | Final Integration & Testing | In progress |
+
+### Key Project Features
+
+- Automated CI/CD using Jenkins
+- Docker containerization
+- AWS ECR image management
+- Infrastructure provisioning using Terraform
+- Configuration management using Ansible
+- AWS CloudWatch monitoring
+- Automated Docker container recovery
+- SNS email notifications
+- Spring Boot application health checks
