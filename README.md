@@ -258,41 +258,43 @@ CloudWatch alarm configuration and actual alarm states should be verified in AWS
 
 The following screenshots demonstrate the actual implementation and execution of the project.
 
+## 📸 Project Screenshots
+
 ### 1. Jenkins CI/CD Pipeline
 
-![Jenkins Pipeline](screenshots/jenkins.png)
+<img src="./screenshots/jenkins.png" width="100%" alt="Jenkins CI/CD Pipeline"/>
 
 ### 2. Docker Containerization
 
-![Docker Container](screenshots/docker.png)
+<img src="./screenshots/docker.png" width="100%" alt="Docker Container"/>
 
 ### 3. Amazon ECR Repository
 
-![Amazon ECR](screenshots/ecr.png)
+<img src="./screenshots/ecr.png" width="100%" alt="Amazon ECR"/>
 
 ### 4. AWS EC2 Infrastructure
 
-![AWS EC2](screenshots/ec2.png)
+<img src="./screenshots/ec2.png" width="100%" alt="AWS EC2"/>
 
 ### 5. Ansible Automated Deployment
 
-![Ansible Deployment](screenshots/ansible.png)
+<img src="./screenshots/ansible.png" width="100%" alt="Ansible Deployment"/>
 
 ### 6. AWS CloudWatch Monitoring
 
-![CloudWatch Monitoring](screenshots/cloudwatch.png)
+<img src="./screenshots/cloudwatch.png" width="100%" alt="CloudWatch Monitoring"/>
 
 ### 7. CloudWatch Alarms
 
-![CloudWatch Alarms](screenshots/alarms.png)
+<img src="./screenshots/alarms.png" width="100%" alt="CloudWatch Alarms"/>
 
 ### 8. Amazon SNS Email Notification
 
-![SNS Email](screenshots/sns-email.png)
+<img src="./screenshots/sns-email.png" width="100%" alt="SNS Email"/>
 
 ### 9. Self-Healing Application Recovery
 
-![Self Healing Recovery](screenshots/self-healing.png)
+<img src="./screenshots/self-healing.png" width="100%" alt="Self-Healing Recovery"/>
 
 ## 📁 Project Structure
 
