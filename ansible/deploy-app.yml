@@ -1,0 +1,89 @@
+
+---
+- name: Deploy Self Healing Application from AWS ECR
+  hosts: app_servers
+  become: true
+
+  vars:
+    aws_region: us-east-1
+    ecr_registry: 273804046923.dkr.ecr.us-east-1.amazonaws.com
+    ecr_repository: self-healing-app
+    image_tag: v4
+    container_name: self-healing-app
+
+  tasks:
+
+    - name: Install required packages
+      apt:
+        name:
+          - docker.io
+          - curl
+          - unzip
+        state: present
+        update_cache: yes
+
+    - name: Download AWS CLI v2 installer
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/awscliv2.zip
+        mode: '0644'
+
+    - name: Extract AWS CLI installer
+      unarchive:
+        src: /tmp/awscliv2.zip
+        dest: /tmp
+        remote_src: yes
+
+    - name: Install AWS CLI v2
+      command: /tmp/aws/install
+      args:
+        creates: /usr/local/bin/aws
+
+    - name: Start and enable Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Verify AWS CLI installation
+      command: aws --version
+      register: aws_version
+      changed_when: false
+
+    - name: Display AWS CLI version
+      debug:
+        msg: "{{ aws_version.stdout }}"
+
+    - name: Authenticate Docker with AWS ECR
+      shell: |
+        aws ecr get-login-password --region {{ aws_region }} |
+        docker login --username AWS --password-stdin {{ ecr_registry }}
+      no_log: true
+
+    - name: Pull application image
+      command: docker pull {{ ecr_registry }}/{{ ecr_repository }}:{{ image_tag }}
+
+    - name: Remove old application container if present
+      command: docker rm -f {{ container_name }}
+      failed_when: false
+
+    - name: Run application container
+      command: >
+        docker run -d
+        --name {{ container_name }}
+        --restart unless-stopped
+        -p 8080:8080
+        {{ ecr_registry }}/{{ ecr_repository }}:{{ image_tag }}
+
+    - name: Wait for application startup
+      wait_for:
+        host: 127.0.0.1
+        port: 8080
+        delay: 5
+        timeout: 90
+
+    - name: Verify application health
+      uri:
+        url: http://127.0.0.1:8080/actuator/health
+        status_code: 200
+
