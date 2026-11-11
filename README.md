@@ -1,4 +1,4 @@
-# 🚀 Self-Healing Cloud Infrastructure & Automated Deployment Platform
+# 🚀 Self-Healing Cloud Infrastructure & Automated Deployment Platform :
 
 <p align="center">
   <b>An Automated DevOps Platform for CI/CD, Cloud Infrastructure, Deployment, Monitoring and Self-Healing</b>
