@@ -4,7 +4,7 @@
   <b>An Automated DevOps Platform for CI/CD, Cloud Infrastructure, Deployment, Monitoring and Self-Healing</b>
 </p>
 
-## 📌 Project Overview
+## 📌 Project Overview:
 
 The **Self-Healing Cloud Infrastructure & Automated Deployment Platform** is a cloud-based DevOps project designed to automate application building, containerization, deployment, infrastructure provisioning, monitoring, and application recovery.
 
@@ -14,7 +14,7 @@ Jenkins automates CI/CD, Docker containerizes the application, Amazon ECR stores
 
 Amazon CloudWatch monitors infrastructure metrics, while a custom self-healing mechanism detects application failures and automatically restarts the Docker container.
 
-## 🎯 Project Objectives
+## 🎯 Project Objectives:
 
 - Automate application build and deployment.
 - Implement Jenkins-based CI/CD.
