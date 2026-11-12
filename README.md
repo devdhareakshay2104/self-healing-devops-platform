@@ -26,7 +26,7 @@ Amazon CloudWatch monitors infrastructure metrics, while a custom self-healing m
 - Implement automatic application recovery.
 - Send email notifications using Amazon SNS.
 
-## 🛠️ Technologies Used
+## 🛠️ Technologies Used:
 
 | Category | Technologies |
 |---|---|
